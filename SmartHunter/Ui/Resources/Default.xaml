@@ -1001,17 +1001,21 @@
                 <Grid x:Name="DescriptionContainer" HorizontalAlignment="Right" Margin="12 0 0 0">
                     <TextBlock x:Name="DescriptionBlockShadow" Style="{StaticResource A_Style_TextBlock_Standard}" Foreground="{StaticResource A_Brush_DropShadow}" RenderTransform="{StaticResource A_Transform_DropShadow}">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0:#,0} ({1})">
+                            <MultiBinding StringFormat="{}{0:#,0} ({1})({2})({3})">
                                 <Binding Path="Damage" Mode="OneWay" />
                                 <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
+                                <Binding Path="TrueDPS" Mode="OneWay" />
+                                <Binding Path="MostRecentDPS" Mode="OneWay" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
                     <TextBlock x:Name="DescriptionBlock" Style="{StaticResource A_Style_TextBlock_Standard}">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0:#,0} ({1})">
+                            <MultiBinding StringFormat="{}{0:#,0} ({1})({2})({3})">
                                 <Binding Path="Damage" Mode="OneWay" />
                                 <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
+                                <Binding Path="TrueDPS" Mode="OneWay" />
+                                <Binding Path="MostRecentDPS" Mode="OneWay" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -1028,17 +1032,21 @@
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="DescriptionBlockShadow" Property="Text">
                     <Setter.Value>
-                        <MultiBinding StringFormat="{}{0} ({1})">
+                        <MultiBinding StringFormat="{}{0:#,0} ({1}) [{2:#,0} | {3:#,0}]">
                             <Binding Path="Damage" Mode="OneWay" />
                             <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
+                            <Binding Path="MostRecentDPS" Mode="OneWay" />
+                            <Binding Path="AvgDamagePerHit" Mode="OneWay" />
                         </MultiBinding>
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="DescriptionBlock" Property="Text">
                     <Setter.Value>
-                        <MultiBinding StringFormat="{}{0} ({1})">
+                        <MultiBinding StringFormat="{}{0:#,0} ({1}) [{2:#,0} | {3:#,0}]">
                             <Binding Path="Damage" Mode="OneWay" />
                             <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
+                            <Binding Path="MostRecentDPS" Mode="OneWay" />
+                            <Binding Path="AvgDamagePerHit" Mode="OneWay" />
                         </MultiBinding>
                     </Setter.Value>
                 </Setter>
