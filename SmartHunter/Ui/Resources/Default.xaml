@@ -27,7 +27,7 @@
     <converters:NumberComparisonConverter x:Key="A_Converter_NumberGreater" Comparison="Greater" />
     <converters:NumberComparisonConverter x:Key="A_Converter_NumberNotEqual" Comparison="NotEqual" />
     <converters:EnumComparisonConverter x:Key="A_Converter_EnumComparison" />
-    <converters:ColorTransformConverter x:Key="A_Converter_BackgroundColorTransform" SaturationAdjustment="-0.8" BrightnessAdjustment="0.66" OpacityOverride="0.3" />
+    <converters:ColorTransformConverter x:Key="A_Converter_BackgroundColorTransform" SaturationAdjustment="-0.8" BrightnessAdjustment="0.66" OpacityOverride="0.4" />
     <converters:StringFormatConverter x:Key="A_Converter_StringFormat" />
     <converters:NumberToCenteredMarginConverter x:Key="A_Converter_NumberToCenteredMargin" />
     <converters:WeaponTypeToNameConverter x:Key="A_Converter_WeaponTypeToName" />
@@ -998,29 +998,31 @@
                     <TextBlock Text="{Binding Name}" Style="{StaticResource A_Style_TextBlock_Standard}" />
                 </Grid>
 
-                <Grid x:Name="DescriptionContainer" HorizontalAlignment="Right" Margin="12 0 0 0">
+                <Grid x:Name="DescriptionContainer" HorizontalAlignment="Right" Margin="12 0 0 0" >
                     <TextBlock x:Name="DescriptionBlockShadow" Style="{StaticResource A_Style_TextBlock_Standard}" Foreground="{StaticResource A_Brush_DropShadow}" RenderTransform="{StaticResource A_Transform_DropShadow}">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0:#,0} ({1})({2})({3})">
+                            <MultiBinding StringFormat="{}{0:#,0} ({1})">
                                 <Binding Path="Damage" Mode="OneWay" />
                                 <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
-                                <Binding Path="TrueDPS" Mode="OneWay" />
-                                <Binding Path="MostRecentDPS" Mode="OneWay" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
                     <TextBlock x:Name="DescriptionBlock" Style="{StaticResource A_Style_TextBlock_Standard}">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0:#,0} ({1})({2})({3})">
+                            <MultiBinding StringFormat="{}{0:#,0} ({1})">
                                 <Binding Path="Damage" Mode="OneWay" />
                                 <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
-                                <Binding Path="TrueDPS" Mode="OneWay" />
-                                <Binding Path="MostRecentDPS" Mode="OneWay" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
                 </Grid>
             </DockPanel>
+            <Grid x:Name="DPSContainer" Margin="6 5 6 4" >
+                <TextBlock x:Name="DPSBlockShadow" Style="{StaticResource A_Style_TextBlock_Standard}" Foreground="{StaticResource A_Brush_DropShadow}" RenderTransform="{StaticResource A_Transform_DropShadow}">
+                </TextBlock>
+                <TextBlock x:Name="DPSBlock" Style="{StaticResource A_Style_TextBlock_Standard}">
+                </TextBlock>
+            </Grid>
         </Grid>
 
         <DataTemplate.Triggers>
@@ -1032,21 +1034,37 @@
                 </MultiDataTrigger.Conditions>
                 <Setter TargetName="DescriptionBlockShadow" Property="Text">
                     <Setter.Value>
-                        <MultiBinding StringFormat="{}{0:#,0} ({1}) [{2:#,0} | {3:#,0}]">
+                        <MultiBinding StringFormat="{}{0:#,0} ({1})">
                             <Binding Path="Damage" Mode="OneWay" />
                             <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
-                            <Binding Path="MostRecentDPS" Mode="OneWay" />
-                            <Binding Path="AvgDamagePerHit" Mode="OneWay" />
                         </MultiBinding>
                     </Setter.Value>
                 </Setter>
                 <Setter TargetName="DescriptionBlock" Property="Text">
                     <Setter.Value>
-                        <MultiBinding StringFormat="{}{0:#,0} ({1}) [{2:#,0} | {3:#,0}]">
+                        <MultiBinding StringFormat="{}{0:#,0} ({1})">
                             <Binding Path="Damage" Mode="OneWay" />
                             <Binding Path="DamageFraction" Mode="OneWay" Converter="{StaticResource A_Converter_FractionToPercentage}" />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="DPSBlockShadow" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{3}[combo: {2:#,0} | avg dps: {0:#,0} | avg hit: {1:#,0}]">
                             <Binding Path="MostRecentDPS" Mode="OneWay" />
                             <Binding Path="AvgDamagePerHit" Mode="OneWay" />
+                            <Binding Path="LastComboDamage" Mode="OneWay" />
+                            <Binding Source="{x:Static system:Environment.NewLine}"/>
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="DPSBlock" Property="Text">
+                    <Setter.Value>
+                        <MultiBinding StringFormat="{}{3}[combo: {2:#,0} | avg dps: {0:#,0} | avg hit: {1:#,0}]">
+                            <Binding Path="MostRecentDPS" Mode="OneWay" />
+                            <Binding Path="AvgDamagePerHit" Mode="OneWay" />
+                            <Binding Path="LastComboDamage" Mode="OneWay" />
+                            <Binding Source="{x:Static system:Environment.NewLine}"/>
                         </MultiBinding>
                     </Setter.Value>
                 </Setter>

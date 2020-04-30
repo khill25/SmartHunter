@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,9 @@ namespace SmartHunter.Core.Helpers
 
         public bool CheckForUpdates(bool forceCheck = false)
         {
-            if (_needUpdates.Count == 0 || forceCheck == true)
+            Log.WriteLine("Skipping version check because this is compiled from source");
+            return false;
+/*            if (_needUpdates.Count == 0 || forceCheck == true)
             {
                 try
                 {
@@ -58,12 +61,14 @@ namespace SmartHunter.Core.Helpers
                     return false;
                 }
             }
-            return _needUpdates.Count > 0;
+            return _needUpdates.Count > 0;*/
         }
 
         public bool DownloadUpdates()
         {
-            try
+            Log.WriteLine("Not downloading any updates because this was built from source.");
+            return false;
+            /*try
             {
                 using var client = new WebClient();
                 while (_needUpdates.Count > 0)
@@ -104,7 +109,7 @@ namespace SmartHunter.Core.Helpers
             {
                 return false;
             }
-            return true;
+            return true;*/
         }
 
         private class UpdateNode // TODO: Add a variable to contain a function pointer to execute a specific action if that Node needs to be updated

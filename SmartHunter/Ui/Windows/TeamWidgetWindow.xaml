@@ -32,7 +32,7 @@
                 <ScaleTransform ScaleX="{Binding TeamWidget.Scale}" ScaleY="{Binding TeamWidget.Scale}" />
             </Grid.LayoutTransform>
 
-            <Grid Visibility="{Binding IsVisible, Converter={StaticResource A_Converter_BoolToVisibility}}">
+            <Grid Visibility="{Binding IsVisible, Converter={StaticResource A_Converter_BoolToVisibility}}" Margin="0,0,232,50">
                 <ContentControl DataContext="{Binding TeamWidget.Context}" Content="{Binding}" />
             </Grid>
         </Grid>

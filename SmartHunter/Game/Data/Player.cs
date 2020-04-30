@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using SmartHunter.Core.Data;
 
 namespace SmartHunter.Game.Data
@@ -49,16 +50,13 @@ namespace SmartHunter.Game.Data
         float m_AccumulatedDamage;
         long m_AccumulatedTime;
 
-        float[] rollingDPSWindow = new float[15];
-        long[] rollingDPSTimes = new long[15]; // parallel array to above
-        long nextWindowIndex = 0;
+        float m_rollingAvgDamage;
+        float m_rollingTotalDamage;
+        long m_rollingTotalTime;
 
-        float m_TrueDPS;
-        public int TrueDPS
-        {
-            get { return (int)m_TrueDPS; }
-            set { SetProperty(ref m_TrueDPS, value); }
-        }
+        float[] rollingDPSWindow = new float[60];
+        long[] rollingDPSTimes = new long[60]; // parallel array to above
+        long nextWindowIndex = 0;
 
         float m_MostRecentDPS;
         public int MostRecentDPS
@@ -74,6 +72,15 @@ namespace SmartHunter.Game.Data
             set { SetProperty(ref m_AvgDamagePerHit, value); }
         }
 
+        long lastHitAt = 0;
+        float comboTotalSoFar = 0;
+        float m_LastComboDamage;
+        public int LastComboDamage
+        {
+            get { return (int)m_LastComboDamage; }
+            set { SetProperty(ref m_LastComboDamage, value); }
+        }
+
         void CalculateAndUpdateDPS()
         {
             long currentTime = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -84,26 +91,54 @@ namespace SmartHunter.Game.Data
             m_DamageAtLastTick = m_Damage; // update the last damage
             m_AccumulatedDamage += damageSinceLastTick;
             m_AccumulatedTime += timeDiff; // track damage time events
-            TrueDPS = (int)(m_AccumulatedDamage / m_AccumulatedTime);
+
+            long timeSinceLastHit = currentTime - lastHitAt;
+            
+            if (timeSinceLastHit > 6000)
+            {
+                comboTotalSoFar = 0;
+
+            } else if (timeSinceLastHit <= 6000 && damageSinceLastTick > 0.01)
+            {
+                comboTotalSoFar += damageSinceLastTick;
+            }
+
             if (damageSinceLastTick <= 0.01)
-            { return; }
-            var damageDoneInTimeInterval = damageSinceLastTick / timeDiff;
+            {
+                CalculateAndSetComboDamage();
+                CalculateAndSetAverages();
+                return;
+            }
+
+            // Calculate combo damage
+            lastHitAt = currentTime;
+            CalculateAndSetComboDamage();
 
             // Rolling window damage calculation and logic
             rollingDPSWindow[nextWindowIndex] = damageSinceLastTick;
             rollingDPSTimes[nextWindowIndex] = currentTime;
             nextWindowIndex += 1;
-            if (nextWindowIndex >= 15)
+            if (nextWindowIndex >= rollingDPSWindow.Length)
             {
                 nextWindowIndex = 0;
             }
 
+            CalculateAndSetAverages();
+
+        }
+
+        private void CalculateAndSetComboDamage()
+        {
+            LastComboDamage = (int)comboTotalSoFar;
+        }
+
+        private void CalculateAndSetAverages()
+        {
             // calculate avg dmage per hit
             AvgDamagePerHit = (int)Average(rollingDPSWindow);
 
             // Calculate the rolling dps
             MostRecentDPS = (int)Average(rollingDPSWindow, rollingDPSTimes);
-
         }
 
         private float Average(float[] values)
@@ -118,42 +153,58 @@ namespace SmartHunter.Game.Data
             int numValuesUsed = 0;
             for (int i = 0; i < values.Length; i++)
             {
-                if (values[i] <= 0.01)
+                if (values[i] <= 0.1)
                 { continue; }
                 totalValue += values[i];
                 numValuesUsed++;
             }
 
+            if (numValuesUsed == 0)
+            {
+                return 0;
+            } 
+
             return totalValue / numValuesUsed;
         }
 
-        private float Average(float[] values, long[] times) {
-            if (values.Length == 0)
-            {
-                return 0;
-            }
-
+        private float Average(float[] values, long[] times, bool altStyle = false) {
             float totalValue = 0;
             long totalTime = 0;
-            long lowestTime = long.MaxValue;
             int numValuesUsed = 0;
             long now = System.DateTimeOffset.Now.ToUnixTimeMilliseconds();
             for (int i = 0; i < values.Length; i++)
             {
                 // We don't care if the time is 0
-                if (times[i] == 0 || times[i] - now > 15000) // also ignore entries more than 15 seconds ago. Only include the most recent 15 seconds
+                if (values[i] < 0.1 || times[i] == 0 || now - times[i] > 8000) // also ignore entries more than some seconds ago. Only include the most recent some seconds
                 {
                     continue;
                 }
-                numValuesUsed++;
-                totalValue += values[i];
-                totalTime += times[i];
-                if (times[i] < lowestTime) {
-                    lowestTime = times[i];
+                
+                var t = now - times[i];
+                if (t > 0)
+                {
+                    totalTime += t;
+                    numValuesUsed++;
+                    totalValue += values[i];
                 }
             }
 
-            long adjustedTime = ((totalTime/numValuesUsed) - lowestTime)/1000; // subtract the lowest time in the array because we want relative time -- that is the total time that has elapsed in the window captured
+            if (numValuesUsed == 0 || totalValue < 0.1)
+            {
+                return -1;
+            }
+
+            long adjustedTime = (totalTime/numValuesUsed)/1000; // subtract the lowest time in the array because we want relative time -- that is the total time that has elapsed in the window captured
+            if (adjustedTime <= 0)
+            {
+                return totalValue / numValuesUsed;
+            }
+
+            if (altStyle)
+            {
+                return totalValue / (totalTime/1000);
+            }
+
             return totalValue / adjustedTime;
         }
     }

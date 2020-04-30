@@ -46,6 +46,8 @@ namespace SmartHunter.Game.Helpers
                 public static readonly ulong PartCollection = 0x14528;
                 public static readonly ulong RemovablePartCollection = PartCollection + 0x22A0 - 0xF0 - 0xF0 - 0xF0;
                 public static readonly ulong StatusEffectCollection = 0x19900;
+                public static readonly ulong MonsterStaminaOffset = 0x1C130; //0x1BE20(???) 0x1C0D8(old) 0x1C130(now)
+                public static readonly ulong MonsterRageOffset = 0x1BE88; //0x1BE20(???) 0x1BE30(old) 0x1BE88(now)
             }
 
             public static class MonsterModel
@@ -872,7 +874,7 @@ namespace SmartHunter.Game.Helpers
 
             // Stamina
 
-            ulong staminaAddress = monster.Address + 0x1C0D8; //0x1BE20
+            ulong staminaAddress = monster.Address + DataOffsets.Monster.MonsterStaminaOffset;
             float maxStaminaBuildUp = MemoryHelper.Read<float>(process, staminaAddress + 0x4);
             float currentStaminaBuildUp = 0;
             if (maxStaminaBuildUp > 0)
@@ -900,9 +902,9 @@ namespace SmartHunter.Game.Helpers
             {
                 monster.UpdateAndGetStatusEffect(staminaAddress, Array.IndexOf(ConfigHelper.MonsterData.Values.StatusEffects, statusEffect), maxStaminaBuildUp > 0 ? maxStaminaBuildUp : 1, !statusEffect.InvertBuildup ? currentStaminaBuildUp : maxStaminaBuildUp - currentStaminaBuildUp, maxFatigueDuration, !statusEffect.InvertDuration ? currentFatigueDuration : maxFatigueDuration - currentFatigueDuration, fatigueActivatedCount);
             }
-            
+
             // Rage
-            ulong rageAddress = monster.Address + 0x1BE30; //0x1BE20
+            ulong rageAddress = monster.Address + DataOffsets.Monster.MonsterRageOffset;
             float maxRageBuildUp = MemoryHelper.Read<float>(process, rageAddress + 0x24);
             float currentRageBuildUp = 0;
             if (maxRageBuildUp > 0)

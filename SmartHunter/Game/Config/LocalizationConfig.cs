@@ -41,9 +41,10 @@ namespace SmartHunter.Config
             { "LOC_MONSTER_SEETHING_BAZELGEUSE", "Seething Bazelgeuse" },
             { "LOC_MONSTER_YIAN_GARUGA", "Yian Garuga" },
             { "LOC_MONSTER_SCARRED_YIAN_GARUGA", "Scarred Yian Garuga" },
-			{ "LOC_MONSTER_GOLD_RATHIAN", "Gold Rathian" },
-			{ "LOC_MONSTER_SILVER_RATHALOS", "Silver Rathalos" },
+            { "LOC_MONSTER_GOLD_RATHIAN", "Gold Rathian" },
+            { "LOC_MONSTER_SILVER_RATHALOS", "Silver Rathalos" },
             { "LOC_MONSTER_RAJANG", "Rajang" },
+            { "LOC_MONSTER_FURIOUS_RAJANG", "Furious Rajang" },
             { "LOC_MONSTER_STYGIAN_ZINOGRE", "Stygian Zinogre" },
             { "LOC_MONSTER_SAFI_JIIVA", "Safi'Jiiva" },
 
@@ -125,6 +126,7 @@ namespace SmartHunter.Config
             { "LOC_PART_LIMBS_RIGHT", "Right Limbs" },
             { "LOC_PART_TAIL", "Tail" },
             { "LOC_PART_TAIL_BLADE", "Tail Blade" },
+            { "LOC_PART_TAIL_CLAW", "Tail Claw" },
             { "LOC_PART_WINGS", "Wings" },
             { "LOC_PART_WING_LEFT", "Left Wing" },
             { "LOC_PART_WING_RIGHT", "Right Wing" },
@@ -241,6 +243,7 @@ namespace SmartHunter.Config
             { "LOC_STATUS_0", "Status 0" },
             { "LOC_STATUS_EFFECT_UNKNOWN", "Unknown Status Effect" },
             { "LOC_STATUS_EFFECT_POISON", "Poison" },
+            { "LOC_STATUS_EFFECT_VENOM", "Venom"},
             { "LOC_STATUS_EFFECT_PARALYSIS", "Paralysis" },
             { "LOC_STATUS_EFFECT_SLEEP", "Sleep" },
             { "LOC_STATUS_EFFECT_BLAST", "Blast" },
@@ -319,6 +322,7 @@ namespace SmartHunter.Config
             { "LOC_STATUS_EFFECT_ELEMENTAL_RESISTANCE_DOWN", "Elemental Resistance Down" },
             { "LOC_STATUS_EFFECT_NO_ITEMS", "No Items" },
             { "LOC_STATUS_EFFECT_BLASTBLIGHT", "Blastblight" },
+            { "LOC_STATUS_EFFECT_BLASTBSCOURGE", "Blastscourge" },
             
             // Buffs
             { "LOC_STATUS_EFFECT_DASH_JUICE", "Dash Juice" },
