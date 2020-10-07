@@ -35,7 +35,7 @@
     <Color x:Key="A_Color_Widget_Background">#00000000</Color>
     <system:Double x:Key="A_Double_Widget_Opacity">1</system:Double>
 
-    <Color x:Key="A_Color_Player_0">#55BB3333</Color>
+    <Color x:Key="A_Color_Player_0">#BB3333</Color>
     <Color x:Key="A_Color_Player_1">#3366CC</Color>
     <Color x:Key="A_Color_Player_2">#CCBB11</Color>
     <Color x:Key="A_Color_Player_3">#33BB33</Color>
